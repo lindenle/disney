@@ -2,6 +2,7 @@ package com.stonevalleypartners.doghouse.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -52,7 +53,8 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
         ButterKnife.bind(this);
         mAdapter = new DogImageGridAdapter(this, mDogs);
         mMainGrid.setAdapter(mAdapter);
-        dogsRestRequest = new DogListRetrofitRequest();
+        String clientID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        dogsRestRequest = new DogListRetrofitRequest(clientID);
     }
 
     @Override

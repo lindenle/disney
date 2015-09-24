@@ -12,18 +12,19 @@ import roboguice.util.temp.Ln;
 
 public class VoteRetrofitRequest extends RetrofitSpiceRequest<Dog, DogHouseApi> {
     public String mDogID;
-    public Vote mVote = new Vote();
+    public String mClientID;
+    public String mAction;
 
     public VoteRetrofitRequest(String dogID, String action, String clientID) {
         super(Dog.class, DogHouseApi.class);
-        mVote.clientID = clientID;
-        mVote.action = action;
+        mAction = action;
+        mClientID = clientID;
         mDogID=dogID;
     }
 
     @Override
     public Dog loadDataFromNetwork() {
         Ln.d("Call dogs web service");
-        return getService().vote(mDogID, mVote);
+        return getService().vote(mDogID, mClientID, mAction);
     }
 }

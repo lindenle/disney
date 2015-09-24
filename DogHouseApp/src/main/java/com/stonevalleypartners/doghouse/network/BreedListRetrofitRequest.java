@@ -11,16 +11,18 @@ import roboguice.util.temp.Ln;
 
 public class BreedListRetrofitRequest extends RetrofitSpiceRequest<Dog.BreedList, DogHouseApi> {
     private String mBreed;
+    private String mClientID;
 
-    public BreedListRetrofitRequest(String breed) {
+    public BreedListRetrofitRequest(String breed, String clientID) {
         super(Dog.BreedList.class, DogHouseApi.class);
         mBreed = breed;
+        mClientID = clientID;
     }
 
 
     @Override
     public Dog.BreedList loadDataFromNetwork() {
         Ln.d("Call breeds web service");
-        return getService().breed(mBreed);
+        return getService().breed(mBreed, mClientID);
     }
 }

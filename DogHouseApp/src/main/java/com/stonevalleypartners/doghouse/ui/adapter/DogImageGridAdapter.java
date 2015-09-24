@@ -31,23 +31,27 @@ public class DogImageGridAdapter extends ArrayAdapter<Dog> {
         mDogs = dogs;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView;
+        Dog dog = (Dog) getItem(position);
         if (convertView == null) {
             gridView = new View(mContext);
-            gridView = inflater.inflate( R.layout.grid_square, null);
+            gridView = inflater.inflate(R.layout.grid_square, null);
         } else {
             gridView = (View) convertView;
         }
-        Dog dog = (Dog) getItem(position);
+
         if ( !dog.breed.equals(mLastBreed)) {
-            //add a section header
+            gridView = new View(mContext);
+            gridView = inflater.inflate(R.layout.grid_header, null);
+            TextView headerText = (TextView) gridView.findViewById(R.id.sectionTitle);
+            headerText.setText(dog.breed);
             Ln.d("new breed " + mLastBreed + " " + dog.breed);
             mLastBreed = dog.breed;
         }
+
         SquaredImageView imageView = (SquaredImageView) gridView.findViewById(R.id.imageView);
         TextView votesText = (TextView) gridView.findViewById(R.id.voteText);
         votesText.setText(dog.votes.toString());

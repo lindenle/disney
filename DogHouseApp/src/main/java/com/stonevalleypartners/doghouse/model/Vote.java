@@ -5,5 +5,4 @@ package com.stonevalleypartners.doghouse.model;
  */
 public class Vote {
     public String action;
-    public String clientID;
 }
