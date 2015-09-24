@@ -38,10 +38,10 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     DogImageGridAdapter mAdapter;
 
     @OnItemClick(R.id.gridview) public void onItemClick( AdapterView<?> parent, View v, int position, long id) {
-        Ln.d("clicked grid"+position);
+        Ln.d("clicked grid" + position);
         //Toast.makeText(this, "" + position, Toast.LENGTH_SHORT).show();
         Intent detailIntent = new Intent(DogHouseMainActivity.this, DogDetailActivity.class);
-        detailIntent.putExtra("dog",mAdapter.getItem(position));
+        detailIntent.putExtra("dog", mAdapter.getItem(position));
         startActivity(detailIntent);
     }
 
@@ -58,6 +58,12 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        fetchDogs();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         fetchDogs();
     }
 
@@ -90,6 +96,7 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     public void updateDogs(final Dog.AllDogList dogs) {
     //here we need to update the adapter
         DogImageGridAdapter adapter = (DogImageGridAdapter) mMainGrid.getAdapter();
+        adapter.clear();
         for ( Dog.DogList dogList: dogs ) {
             Ln.d("%s",dogList.breed);
             adapter.addAll(dogList.dogs);

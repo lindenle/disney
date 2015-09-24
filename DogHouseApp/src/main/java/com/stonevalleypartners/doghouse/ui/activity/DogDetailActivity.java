@@ -1,5 +1,6 @@
 package com.stonevalleypartners.doghouse.ui.activity;
 
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,8 +9,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 import com.stonevalleypartners.doghouse.model.Dog;
+import com.stonevalleypartners.doghouse.network.VoteRetrofitRequest;
 import com.stonevalleypartners.peoplelist.R;
 
 import butterknife.Bind;
@@ -62,6 +66,28 @@ public class DogDetailActivity extends DogHouseBaseActivity {
 
     public void doVote(Dog mDog) {
         Toast.makeText(this, "voting for dog "+mDog.id, Toast.LENGTH_SHORT).show();
+        String clientID= Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        VoteRetrofitRequest voteRestRequest = new VoteRetrofitRequest(mDog.id,"up",clientID);
+        getSpiceManager().execute(voteRestRequest, new DogDetailActivity.VoteRequestListener());
+    }
+
+    public void updateDog(Dog dog) {
+        mDog = dog;
+        recreate();
+    }
+
+    public final class VoteRequestListener implements RequestListener<Dog> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            Toast.makeText(DogDetailActivity.this, "failure", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRequestSuccess(final Dog result) {
+            //Toast.makeText(DogHouseMainActivity.this, "success", Toast.LENGTH_SHORT).show();
+            updateDog(result);
+        }
     }
 
 }

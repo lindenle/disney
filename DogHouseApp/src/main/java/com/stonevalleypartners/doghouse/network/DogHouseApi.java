@@ -20,5 +20,5 @@ public interface DogHouseApi {
     Dog.BreedList breed(@Path("breed") String breed);
 
     @POST("/dog/{id}")
-    Vote vote(@Path("id") String id);// Need to be able to send body, @Body("action") String action, @Body("clientID") String clientID);
+    Dog vote(@Path("id") String id, @Body Vote vote);
 }

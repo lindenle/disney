@@ -10,21 +10,20 @@ import roboguice.util.temp.Ln;
  * Created by lindenle on 9/23/15.
  */
 
-public class VoteRetrofitRequest extends RetrofitSpiceRequest<Vote, DogHouseApi> {
-    public String mClientID;
-    public String mAction;
+public class VoteRetrofitRequest extends RetrofitSpiceRequest<Dog, DogHouseApi> {
     public String mDogID;
+    public Vote mVote = new Vote();
 
     public VoteRetrofitRequest(String dogID, String action, String clientID) {
-        super(Vote.class, DogHouseApi.class);
-        mClientID = clientID;
+        super(Dog.class, DogHouseApi.class);
+        mVote.clientID = clientID;
+        mVote.action = action;
         mDogID=dogID;
-        mAction = action;
     }
 
     @Override
-    public Vote loadDataFromNetwork() {
+    public Dog loadDataFromNetwork() {
         Ln.d("Call dogs web service");
-        return getService().vote(mDogID); // how to send body, mAction, mClientID);
+        return getService().vote(mDogID, mVote);
     }
 }
