@@ -25,6 +25,7 @@ public class DogDetailActivity extends DogHouseBaseActivity {
     ImageView detailView;
 
     private Dog mDog;
+    private MenuItem mLikeItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class DogDetailActivity extends DogHouseBaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         // need to change the like button if haveVoted
-        setTitle("Votes: "+mDog.votes);
         Picasso.with(this)
                 .load(mDog.url)
                 .placeholder(R.drawable.dog_placeholder)
@@ -44,10 +44,13 @@ public class DogDetailActivity extends DogHouseBaseActivity {
                 .tag(this)
                 .into(detailView);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_vote, menu);
+        mLikeItem = menu.findItem(R.id.action_vote);
+        updateState();
         return true;
     }
 
@@ -65,15 +68,27 @@ public class DogDetailActivity extends DogHouseBaseActivity {
     }
 
     public void doVote(Dog mDog) {
-        Toast.makeText(this, "voting for dog "+mDog.id, Toast.LENGTH_SHORT).show();
-        String clientID= Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        VoteRetrofitRequest voteRestRequest = new VoteRetrofitRequest(mDog.id,"up",clientID);
+        Toast.makeText(this, "voting for dog " + mDog.id, Toast.LENGTH_SHORT).show();
+        String clientID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String voteAction = mDog.haveVoted? "down" : "up";
+        VoteRetrofitRequest voteRestRequest = new VoteRetrofitRequest(mDog.id, voteAction, clientID);
         getSpiceManager().execute(voteRestRequest, new DogDetailActivity.VoteRequestListener());
     }
 
     public void updateDog(Dog dog) {
+        Ln.d("updateDog" + dog.toString());
         mDog = dog;
-        recreate();
+        updateState();
+    }
+
+    public void updateState() {
+        setTitle("Votes: " + mDog.votes);
+        if (mDog.haveVoted) {
+            mLikeItem.setTitle("unlike");
+        } else {
+            mLikeItem.setTitle("like");
+
+        }
     }
 
     public final class VoteRequestListener implements RequestListener<Dog> {
