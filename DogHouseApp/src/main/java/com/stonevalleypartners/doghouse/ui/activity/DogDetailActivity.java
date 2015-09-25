@@ -14,7 +14,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.squareup.picasso.Picasso;
 import com.stonevalleypartners.doghouse.model.Dog;
 import com.stonevalleypartners.doghouse.network.VoteRetrofitRequest;
-import com.stonevalleypartners.peoplelist.R;
+import com.stonevalleypartners.doghouse.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

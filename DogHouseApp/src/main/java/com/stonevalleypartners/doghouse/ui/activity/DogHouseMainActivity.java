@@ -19,7 +19,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.stonevalleypartners.doghouse.network.DogListRetrofitRequest;
 import com.stonevalleypartners.doghouse.ui.adapter.DogImageGridAdapter;
-import com.stonevalleypartners.peoplelist.R;
+import com.stonevalleypartners.doghouse.R;
 import com.stonevalleypartners.doghouse.model.Dog;
 
 

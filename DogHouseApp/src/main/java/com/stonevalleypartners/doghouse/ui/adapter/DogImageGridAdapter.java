@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.stonevalleypartners.doghouse.model.Dog;
-import com.stonevalleypartners.peoplelist.R;
+import com.stonevalleypartners.doghouse.R;
 import com.stonevalleypartners.doghouse.ui.views.SquaredImageView;
 import java.util.List;
 

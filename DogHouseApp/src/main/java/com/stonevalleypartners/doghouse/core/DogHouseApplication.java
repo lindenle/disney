@@ -2,7 +2,7 @@ package com.stonevalleypartners.doghouse.core;
 
 import android.app.Application;
 
-import com.stonevalleypartners.peoplelist.BuildConfig;
+import com.stonevalleypartners.doghouse.BuildConfig;
 
 import butterknife.ButterKnife;
 
