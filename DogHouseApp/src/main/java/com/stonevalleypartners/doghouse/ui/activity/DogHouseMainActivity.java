@@ -58,11 +58,11 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
         ButterKnife.bind(this);
         String clientID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         dogsRestRequest = new DogListRetrofitRequest(clientID);
+        mAdapter = new DogImageGridAdapter(this, mDogs);
     }
 
     private void initControls(){
-        Ln.d("Headers: "+mSections.toString());
-        mAdapter = new DogImageGridAdapter(this, mDogs);
+        Ln.d("Headers: " + mSections.toString());
         mSimpleSectionedGridAdapter = new SimpleSectionedGridAdapter(this, mAdapter,
                 R.layout.grid_header, R.id.header_layout, R.id.header);
         mSimpleSectionedGridAdapter.setGridView(mMainGrid);
