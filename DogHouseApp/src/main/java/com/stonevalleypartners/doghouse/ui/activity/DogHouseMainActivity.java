@@ -38,7 +38,10 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     @Bind(R.id.gridview) GridView mMainGrid;
     List<Dog> mDogs = new ArrayList<Dog>();
     DogImageGridAdapter mAdapter;
-    private ArrayList<SimpleSectionedGridAdapter.Section> sections = new ArrayList<SimpleSectionedGridAdapter.Section>();
+    private ArrayList<SimpleSectionedGridAdapter.Section> mSections = new ArrayList<SimpleSectionedGridAdapter.Section>();
+    private SimpleSectionedGridAdapter mSimpleSectionedGridAdapter;
+    private Integer mSectionLocation = 0;
+    private Boolean mControlsInitialized = false;
 
     @OnItemClick(R.id.gridview) public void onItemClick( AdapterView<?> parent, View v, int position, long id) {
         Ln.d("clicked grid" + position);
@@ -53,16 +56,19 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mAdapter = new DogImageGridAdapter(this, mDogs);
-        SimpleSectionedGridAdapter simpleSectionedGridAdapter = new SimpleSectionedGridAdapter(this, mAdapter,
-                R.layout.grid_header, R.id.header_layout, R.id.header);
-        simpleSectionedGridAdapter.setGridView(mMainGrid);
-        simpleSectionedGridAdapter.setSections(sections.toArray(new SimpleSectionedGridAdapter.Section[0]));
-
-        mMainGrid.setAdapter(simpleSectionedGridAdapter);
-
         String clientID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         dogsRestRequest = new DogListRetrofitRequest(clientID);
+    }
+
+    private void initControls(){
+        Ln.d("Headers: "+mSections.toString());
+        mAdapter = new DogImageGridAdapter(this, mDogs);
+        mSimpleSectionedGridAdapter = new SimpleSectionedGridAdapter(this, mAdapter,
+                R.layout.grid_header, R.id.header_layout, R.id.header);
+        mSimpleSectionedGridAdapter.setGridView(mMainGrid);
+        mSimpleSectionedGridAdapter.setSections(mSections.toArray(new SimpleSectionedGridAdapter.Section[0]));
+        mMainGrid.setAdapter(mSimpleSectionedGridAdapter);
+        mControlsInitialized = true;
     }
 
     @Override
@@ -104,16 +110,20 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     }
 
     public void updateDogs(final Dog.AllDogList dogs) {
-    //here we need to update the adapter
+        //here we need to update the adapter
         mAdapter.clear();
         for ( Dog.DogList dogList: dogs ) {
+            mSections.add(new SimpleSectionedGridAdapter.Section(mSectionLocation,dogList.breed));
+            mSectionLocation += dogList.dogs.size();
             Ln.d("%s",dogList.breed);
             mAdapter.addAll(dogList.dogs);
             for ( Dog dog: dogList.dogs) {
                 Ln.d("%s",dog.toString());
             }
         }
+        if( ! mControlsInitialized ) initControls();
         mAdapter.notifyDataSetChanged();
+        mSimpleSectionedGridAdapter.notifyDataSetChanged();
     }
 
     public final class DogsRequestListener implements RequestListener<Dog.AllDogList> {

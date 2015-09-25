@@ -15,7 +15,7 @@ import roboguice.util.temp.Ln;
 
 public class DogHouseRetrofitService extends RetrofitGsonSpiceService {
 
-    final static String BASE_URL = "http://10.0.3.2:8080";
+    final static String BASE_URL = "http://10.0.3.2:10000";
 
     @Override
     public void onCreate() {
