@@ -29,6 +29,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
+import dev.dworks.libs.astickyheader.SimpleSectionedGridAdapter;
 import roboguice.util.temp.Ln;
 
 public class DogHouseMainActivity extends DogHouseBaseActivity {
@@ -37,6 +38,7 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
     @Bind(R.id.gridview) GridView mMainGrid;
     List<Dog> mDogs = new ArrayList<Dog>();
     DogImageGridAdapter mAdapter;
+    private ArrayList<SimpleSectionedGridAdapter.Section> sections = new ArrayList<SimpleSectionedGridAdapter.Section>();
 
     @OnItemClick(R.id.gridview) public void onItemClick( AdapterView<?> parent, View v, int position, long id) {
         Ln.d("clicked grid" + position);
@@ -52,7 +54,13 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mAdapter = new DogImageGridAdapter(this, mDogs);
-        mMainGrid.setAdapter(mAdapter);
+        SimpleSectionedGridAdapter simpleSectionedGridAdapter = new SimpleSectionedGridAdapter(this, mAdapter,
+                R.layout.grid_header, R.id.header_layout, R.id.header);
+        simpleSectionedGridAdapter.setGridView(mMainGrid);
+        simpleSectionedGridAdapter.setSections(sections.toArray(new SimpleSectionedGridAdapter.Section[0]));
+
+        mMainGrid.setAdapter(simpleSectionedGridAdapter);
+
         String clientID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         dogsRestRequest = new DogListRetrofitRequest(clientID);
     }
@@ -97,16 +105,15 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
 
     public void updateDogs(final Dog.AllDogList dogs) {
     //here we need to update the adapter
-        DogImageGridAdapter adapter = (DogImageGridAdapter) mMainGrid.getAdapter();
-        adapter.clear();
+        mAdapter.clear();
         for ( Dog.DogList dogList: dogs ) {
             Ln.d("%s",dogList.breed);
-            adapter.addAll(dogList.dogs);
+            mAdapter.addAll(dogList.dogs);
             for ( Dog dog: dogList.dogs) {
                 Ln.d("%s",dog.toString());
             }
         }
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     public final class DogsRequestListener implements RequestListener<Dog.AllDogList> {
