@@ -23,7 +23,6 @@ import roboguice.util.temp.Ln;
 public class DogImageGridAdapter extends ArrayAdapter<Dog> {
     private Context mContext;
     private List<Dog> mDogs;
-    private String mLastBreed = "";
 
     public DogImageGridAdapter(Context context, List<Dog> dogs) {
         super(context, R.layout.grid_square, dogs);
@@ -41,15 +40,6 @@ public class DogImageGridAdapter extends ArrayAdapter<Dog> {
             gridView = inflater.inflate(R.layout.grid_square, null);
         } else {
             gridView = (View) convertView;
-        }
-
-        if ( !dog.breed.equals(mLastBreed)) {
-            gridView = new View(mContext);
-            gridView = inflater.inflate(R.layout.grid_header, null);
-            TextView headerText = (TextView) gridView.findViewById(R.id.sectionTitle);
-            headerText.setText(dog.breed);
-            Ln.d("new breed " + mLastBreed + " " + dog.breed);
-            mLastBreed = dog.breed;
         }
 
         SquaredImageView imageView = (SquaredImageView) gridView.findViewById(R.id.imageView);
