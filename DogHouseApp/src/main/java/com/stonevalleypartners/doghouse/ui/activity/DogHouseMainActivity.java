@@ -21,6 +21,8 @@ import com.stonevalleypartners.doghouse.network.DogListRetrofitRequest;
 import com.stonevalleypartners.doghouse.ui.adapter.DogImageGridAdapter;
 import com.stonevalleypartners.peoplelist.R;
 import com.stonevalleypartners.doghouse.model.Dog;
+import com.tonicartos.widget.stickygridheaders.StickyGridHeadersBaseAdapter;
+import com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView;
 
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import roboguice.util.temp.Ln;
 public class DogHouseMainActivity extends DogHouseBaseActivity {
 
     DogListRetrofitRequest dogsRestRequest;
-    @Bind(R.id.gridview) GridView mMainGrid;
+    @Bind(R.id.gridview) StickyGridHeadersGridView mMainGrid;
     List<Dog> mDogs = new ArrayList<Dog>();
     DogImageGridAdapter mAdapter;
 
@@ -97,16 +99,16 @@ public class DogHouseMainActivity extends DogHouseBaseActivity {
 
     public void updateDogs(final Dog.AllDogList dogs) {
     //here we need to update the adapter
-        DogImageGridAdapter adapter = (DogImageGridAdapter) mMainGrid.getAdapter();
-        adapter.clear();
+        mAdapter.clear();
         for ( Dog.DogList dogList: dogs ) {
+            mAdapter.addHeader(dogList.breed);
             Ln.d("%s",dogList.breed);
-            adapter.addAll(dogList.dogs);
+            mAdapter.addAll(dogList.dogs);
             for ( Dog dog: dogList.dogs) {
                 Ln.d("%s",dog.toString());
             }
         }
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     public final class DogsRequestListener implements RequestListener<Dog.AllDogList> {
